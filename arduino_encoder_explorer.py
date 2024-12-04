@@ -34,6 +34,13 @@ def main():
     # Get user input for wheel diameter
     wheel_diameter = float(input("Enter wheel diameter (in meters): "))
 
+    #Converting wheel diameter into circumference
+    circumference = float(input(math.pi*(wheel_diameter/2)*2))
+
+#Taking the cirumference to estimate the total distance traveled, should be able to backwork the crp rate
+    total_distance_estimated=circumference 
+    
+    
     # Start the serial reading thread
     data_queue = queue.Queue()
     stop_event = threading.Event()
@@ -105,6 +112,9 @@ def main():
         cumulative_distance += distance
         distances.append((times[i], cumulative_distance))
 
+       #estimated distance per count to calculate CPR
+        estimated_distance_per_count = (total_distance_estimated / delta_counts) 
+
     # Display results
     print("\nCalculated Speeds and Cumulative Distance based on your estimated CPR:")
     print("Time (s)\tSpeed (m/s)\tCumulative Distance (m)")
@@ -122,6 +132,9 @@ def main():
     else:
         print("No speed data to calculate average.")
 
+# Calculate the CPR
+    calculated_cpr = ((math.pi*wheel_diameter)/estimated_distance_per_count)
+    
     # Plot the speed over time
     if speeds:
         plot_times, plot_speeds = zip(*speeds)
@@ -194,6 +207,9 @@ def main():
             else:
                 print("No speed data to calculate average.")
 
+            # Display calculated CPR
+            print(f"\nCalculated CPR: {calculated_cpr}")
+            
             # Plot the speed over time
             if speeds:
                 plot_times, plot_speeds = zip(*speeds)
